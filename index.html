@@ -5,336 +5,411 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bypass Tool — Gtraffic • Link4m • Layma</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --bg: #f8fafc;
-  --card-bg: #ffffff;
-  --text: #0f172a;
-  --muted: #64748b;
-  --border: #e2e8f0;
-  --success: #10b981;
-  --error: #ef4444;
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#00d9ff;
+  --blue-d:#0090ff;
+  --pink:#ff2d88;
+  --pink-l:#ff7ac0;
+  --bg:#04060e;
+  --panel:#0a0f1e;
+  --txt:#e6f1ff;
+  --muted:#8fa7c4;
+}
+html,body{height:100%}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--txt);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  padding:26px 14px 70px;
+  overflow-x:hidden;
+  position:relative;
+}
+/* nền động */
+body::before{
+  content:'';
+  position:fixed;inset:-25%;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(0,217,255,.20), transparent 42%),
+    radial-gradient(circle at 88% 88%, rgba(255,45,136,.20), transparent 42%),
+    radial-gradient(circle at 60% 40%, rgba(0,144,255,.08), transparent 55%);
+  animation:floatBg 14s ease-in-out infinite alternate;
+  pointer-events:none;z-index:0;
+}
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(0,217,255,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,45,136,.045) 1px, transparent 1px);
+  background-size:46px 46px;
+  mask-image:radial-gradient(circle at 50% 30%, #000 10%, transparent 78%);
+  -webkit-mask-image:radial-gradient(circle at 50% 30%, #000 10%, transparent 78%);
+  pointer-events:none;z-index:0;
+}
+@keyframes floatBg{
+  from{transform:translate3d(0,0,0) scale(1)}
+  to{transform:translate3d(0,-34px,0) scale(1.06)}
 }
 
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  padding: 32px 16px;
+.wrap{width:100%;max-width:780px;position:relative;z-index:2}
+
+/* ---------- CARD ---------- */
+.card{
+  position:relative;
+  background:linear-gradient(160deg,rgba(9,15,32,.94),rgba(4,6,14,.97));
+  border:1px solid rgba(0,217,255,.22);
+  border-radius:20px;
+  padding:22px;
+  margin-bottom:16px;
+  box-shadow:0 0 34px rgba(0,217,255,.07), 0 0 60px rgba(255,45,136,.05), inset 0 1px 0 rgba(255,255,255,.04);
+  overflow:hidden;
+}
+.card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--blue),var(--pink),transparent);
+  opacity:.85;
 }
 
-.wrap {
-  width: 100%;
-  max-width: 680px;
+/* ---------- HEADER ---------- */
+.head{text-align:center;padding:26px 22px}
+.title{
+  font-size:clamp(24px,5vw,34px);
+  font-weight:900;
+  letter-spacing:3px;
+  background:linear-gradient(100deg,#00d9ff 0%,#7fe6ff 30%,#ff2d88 68%,#ff9ad2 100%);
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;
+  filter:drop-shadow(0 0 18px rgba(0,217,255,.35));
+  animation:hueShift 6s linear infinite;
+}
+@keyframes hueShift{
+  0%,100%{filter:drop-shadow(0 0 18px rgba(0,217,255,.35))}
+  50%{filter:drop-shadow(0 0 22px rgba(255,45,136,.42))}
+}
+.sub{
+  margin-top:8px;font-size:13px;color:var(--muted);
+  letter-spacing:1.6px;text-transform:uppercase;
 }
 
-/* Card layout */
-.card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+/* ---------- SECTION TITLE ---------- */
+.sec-title{
+  display:flex;align-items:center;gap:10px;
+  font-size:14px;font-weight:700;letter-spacing:1.2px;
+  text-transform:uppercase;color:#bfe6ff;margin-bottom:14px;
+}
+.sec-title::before{
+  content:'';width:5px;height:18px;border-radius:3px;
+  background:linear-gradient(180deg,var(--blue),var(--pink));
+  box-shadow:0 0 12px rgba(0,217,255,.7);
 }
 
-/* Header */
-.head {
-  text-align: center;
+/* ---------- SITE GRID ---------- */
+.site-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:10px;
 }
-.title {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--text);
+.site{
+  position:relative;
+  font-family:inherit;font-size:14px;font-weight:600;
+  color:#bfe0ff;
+  padding:13px 12px;
+  border-radius:12px;
+  cursor:pointer;
+  background:linear-gradient(150deg,rgba(0,217,255,.06),rgba(255,45,136,.04));
+  border:1px solid rgba(0,217,255,.25);
+  transition:.22s ease;
+  overflow:hidden;
+  letter-spacing:.3px;
 }
-.sub {
-  margin-top: 4px;
-  font-size: 13px;
-  color: var(--muted);
+.site::after{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.16),transparent 70%);
+  transform:translateX(-120%);
+  transition:.5s;
 }
-
-/* Section Title */
-.sec-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 12px;
+.site:hover{
+  border-color:rgba(255,45,136,.6);
+  color:#fff;
+  box-shadow:0 0 20px rgba(255,45,136,.25), 0 0 20px rgba(0,217,255,.12) inset;
+  transform:translateY(-2px);
 }
-
-/* Site Grid */
-.site-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 8px;
+.site:hover::after{transform:translateX(120%)}
+.site.active{
+  background:linear-gradient(120deg,var(--blue-d),var(--blue) 35%,var(--pink) 100%);
+  color:#04060e;font-weight:800;
+  border-color:transparent;
+  box-shadow:0 0 26px rgba(0,217,255,.45), 0 0 30px rgba(255,45,136,.35);
 }
-.site {
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--muted);
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  transition: all 0.2s ease;
-}
-.site:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-}
-.site.active {
-  background: #eff6ff;
-  color: var(--primary);
-  border-color: var(--primary);
-  font-weight: 600;
+.site.active::before{
+  content:'✓';
+  position:absolute;top:5px;right:9px;
+  font-size:12px;font-weight:900;color:#04060e;opacity:.85;
 }
 
-.sel-line {
-  margin-top: 14px;
-  font-size: 13px;
-  color: var(--muted);
+.sel-line{
+  margin-top:14px;font-size:13px;color:var(--muted);
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
 }
-.sel-line b {
-  color: var(--primary);
+.sel-line b{
+  color:var(--pink-l);
+  text-shadow:0 0 12px rgba(255,45,136,.6);
+}
+.dot-live{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--blue);
+  box-shadow:0 0 10px var(--blue);
+  animation:pulse 1.4s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.75)}}
+
+/* ---------- INPUT ---------- */
+.field-label{
+  display:block;font-size:13px;color:#a9c6e6;
+  margin-bottom:9px;letter-spacing:.4px;
+}
+.input-wrap{position:relative}
+.input-wrap::before{
+  content:'🔗';
+  position:absolute;left:15px;top:50%;transform:translateY(-50%);
+  font-size:15px;opacity:.65;pointer-events:none;
+}
+#urlInput{
+  width:100%;
+  font-family:inherit;font-size:15px;
+  color:#eaf6ff;
+  padding:15px 15px 15px 44px;
+  border-radius:13px;
+  background:rgba(2,6,16,.85);
+  border:1px solid rgba(0,217,255,.3);
+  outline:none;
+  transition:.25s;
+}
+#urlInput::placeholder{color:#4d6787}
+#urlInput:focus{
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px rgba(0,217,255,.12), 0 0 24px rgba(0,217,255,.22);
+  background:rgba(2,8,20,.95);
+}
+#urlInput:disabled{opacity:.55;cursor:not-allowed}
+
+.url-err{
+  margin-top:10px;font-size:13.5px;font-weight:700;
+  color:#ff3b5c;
+  text-shadow:0 0 12px rgba(255,59,92,.55);
+  display:none;
+  animation:shake .45s;
+}
+.url-err.show{display:block}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-7px)}
+  40%{transform:translateX(7px)}
+  60%{transform:translateX(-5px)}
+  80%{transform:translateX(5px)}
 }
 
-/* Input Form */
-.field-label {
-  display: block;
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 8px;
+/* ---------- BUTTON ---------- */
+.btn{
+  position:relative;
+  width:100%;
+  margin-top:16px;
+  padding:17px;
+  font-family:inherit;
+  font-size:16px;
+  font-weight:900;
+  letter-spacing:2.4px;
+  color:#04060e;
+  border:none;border-radius:14px;
+  cursor:pointer;
+  background:linear-gradient(100deg,var(--blue-d),var(--blue) 30%,var(--pink) 78%,#ff5ba6);
+  background-size:200% 100%;
+  box-shadow:0 8px 30px rgba(0,217,255,.28), 0 0 34px rgba(255,45,136,.22);
+  transition:.28s ease;
+  overflow:hidden;
+  text-transform:uppercase;
 }
-.input-wrap {
-  position: relative;
+.btn:hover:not(:disabled){
+  background-position:100% 0;
+  transform:translateY(-2px);
+  box-shadow:0 12px 40px rgba(255,45,136,.4), 0 0 40px rgba(0,217,255,.35);
 }
-#urlInput {
-  width: 100%;
-  font-family: inherit;
-  font-size: 14px;
-  color: var(--text);
-  padding: 12px 14px;
-  border-radius: 8px;
-  background: #fff;
-  border: 1px solid var(--border);
-  outline: none;
-  transition: border-color 0.2s;
+.btn:active:not(:disabled){transform:translateY(0) scale(.99)}
+.btn:disabled{
+  cursor:not-allowed;
+  filter:grayscale(.35) brightness(.75);
+  box-shadow:none;
 }
-#urlInput:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+.btn .spin{
+  display:none;
+  width:15px;height:15px;margin-right:9px;
+  border:2.5px solid rgba(4,6,14,.35);
+  border-top-color:#04060e;
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+  vertical-align:-2px;
 }
-#urlInput:disabled {
-  background: var(--bg);
-  cursor: not-allowed;
+.btn.loading .spin{display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- PANEL ---------- */
+.panel{display:none}
+.panel.show{display:block;animation:fadeUp .45s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+.panel-head{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;flex-wrap:wrap;
+  font-size:13.5px;font-weight:800;letter-spacing:1.6px;
+  text-transform:uppercase;color:#bfe6ff;margin-bottom:16px;
+}
+.panel-head span.tag{
+  font-size:11px;letter-spacing:1px;padding:4px 10px;border-radius:20px;
+  color:var(--blue);
+  border:1px solid rgba(0,217,255,.4);
+  background:rgba(0,217,255,.08);
+  animation:pulse 1.6s infinite;
 }
 
-.url-err {
-  margin-top: 8px;
-  font-size: 13px;
-  color: var(--error);
-  display: none;
+/* progress */
+.bar{
+  height:5px;border-radius:6px;
+  background:rgba(255,255,255,.06);
+  overflow:hidden;margin-bottom:16px;
 }
-.url-err.show { display: block; }
-
-/* Button */
-.btn {
-  width: 100%;
-  margin-top: 16px;
-  padding: 12px;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  background: var(--primary);
-  transition: background 0.2s;
-}
-.btn:hover:not(:disabled) {
-  background: var(--primary-hover);
-}
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-.btn .spin {
-  display: none;
-  width: 14px;
-  height: 14px;
-  margin-right: 8px;
-  border: 2px solid #fff;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-  vertical-align: -2px;
-}
-.btn.loading .spin { display: inline-block; }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* Panel Trạng thái */
-.panel { display: none; }
-.panel.show { display: block; }
-
-.panel-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 16px;
-}
-.panel-head span.tag {
-  font-size: 12px;
-  padding: 2px 8px;
-  border-radius: 6px;
-  color: var(--primary);
-  background: #eff6ff;
+.bar i{
+  display:block;height:100%;width:0%;
+  border-radius:6px;
+  background:linear-gradient(90deg,var(--blue),var(--pink));
+  box-shadow:0 0 14px rgba(0,217,255,.7);
+  transition:width .25s linear;
 }
 
-/* Progress bar */
-.bar {
-  height: 4px;
-  border-radius: 2px;
-  background: var(--border);
-  overflow: hidden;
-  margin-bottom: 16px;
+/* info grid */
+.info-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:10px;margin-bottom:18px;
 }
-.bar i {
-  display: block;
-  height: 100%;
-  width: 0%;
-  background: var(--primary);
-  transition: width 0.2s linear;
+.info{
+  padding:12px 14px;border-radius:12px;
+  background:linear-gradient(150deg,rgba(0,217,255,.06),rgba(255,45,136,.04));
+  border:1px solid rgba(0,217,255,.18);
+}
+.info span{
+  display:block;font-size:10.5px;letter-spacing:1.2px;
+  text-transform:uppercase;color:#7b96b5;margin-bottom:5px;
+}
+.info b{
+  font-size:13.5px;color:#dff2ff;font-weight:700;
+  word-break:break-word;
+}
+.info b.ip{color:var(--blue);text-shadow:0 0 12px rgba(0,217,255,.55)}
+
+/* steps */
+.steps{list-style:none;display:flex;flex-direction:column;gap:7px}
+.step{
+  display:flex;align-items:center;gap:11px;
+  padding:10px 13px;border-radius:11px;
+  font-size:14px;color:#a8c2dd;
+  background:rgba(0,217,255,.035);
+  border-left:3px solid rgba(0,217,255,.35);
+  opacity:0;
+  animation:stepIn .35s ease forwards;
+}
+@keyframes stepIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:translateX(0)}}
+.step i{
+  width:8px;height:8px;border-radius:50%;flex:none;
+  background:var(--blue);
+  box-shadow:0 0 10px var(--blue);
+  animation:pulse 1.1s infinite;
+}
+.step.ok{
+  color:#7dffc4;
+  border-left-color:#1ee88a;
+  background:rgba(30,232,138,.07);
+}
+.step.ok i{background:#1ee88a;box-shadow:0 0 12px #1ee88a;animation:none}
+.step.bad{
+  color:#ff5f7a;
+  border-left-color:#ff2d55;
+  background:rgba(255,45,85,.08);
+}
+.step.bad i{background:#ff2d55;box-shadow:0 0 12px #ff2d55;animation:none}
+
+/* result */
+.result{margin-top:16px}
+.err-box{
+  padding:18px 16px;border-radius:14px;text-align:center;
+  font-size:15px;font-weight:900;letter-spacing:1px;
+  color:#ff3b5c;
+  background:rgba(255,0,60,.08);
+  border:1px solid rgba(255,45,90,.55);
+  text-shadow:0 0 16px rgba(255,59,92,.75);
+  box-shadow:0 0 30px rgba(255,0,60,.18), inset 0 0 30px rgba(255,0,60,.06);
+  animation:shake .5s, glowRed 2s infinite alternate;
+}
+.err-box small{
+  display:block;margin-top:9px;font-size:11.5px;
+  font-weight:500;letter-spacing:.4px;color:#c46b7e;text-shadow:none;
+}
+@keyframes glowRed{
+  from{box-shadow:0 0 24px rgba(255,0,60,.15), inset 0 0 24px rgba(255,0,60,.05)}
+  to{box-shadow:0 0 40px rgba(255,0,60,.35), inset 0 0 34px rgba(255,0,60,.10)}
 }
 
-/* Info grid */
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
-  margin-bottom: 16px;
+.ok-box{
+  padding:20px 16px;border-radius:14px;text-align:center;
+  background:linear-gradient(150deg,rgba(0,217,255,.10),rgba(255,45,136,.10));
+  border:1px solid rgba(0,217,255,.45);
+  box-shadow:0 0 34px rgba(0,217,255,.18);
+  animation:fadeUp .5s ease;
 }
-.info {
-  padding: 10px 12px;
-  border-radius: 8px;
-  background: var(--bg);
-  border: 1px solid var(--border);
+.ok-box h4{
+  font-size:17px;letter-spacing:1.6px;margin-bottom:6px;
+  background:linear-gradient(90deg,#00d9ff,#ff2d88);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
 }
-.info span {
-  display: block;
-  font-size: 11px;
-  color: var(--muted);
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-.info b {
-  font-size: 13px;
-  color: var(--text);
-  word-break: break-word;
-}
-
-/* Steps list */
-.steps { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-.step {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 13px;
-  color: var(--muted);
-  background: var(--bg);
-}
-.step i {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--muted);
-}
-.step.ok { color: var(--success); background: #ecfdf5; }
-.step.ok i { background: var(--success); }
-.step.bad { color: var(--error); background: #fef2f2; }
-.step.bad i { background: var(--error); }
-
-/* Results */
-.result { margin-top: 16px; }
-.err-box {
-  padding: 16px;
-  border-radius: 8px;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--error);
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-}
-.err-box small {
-  display: block;
-  margin-top: 6px;
-  font-size: 12px;
-  font-weight: 400;
-  color: #991b1b;
-}
-
-.ok-box {
-  padding: 16px;
-  border-radius: 8px;
-  text-align: center;
-  background: #ecfdf5;
-  border: 1px solid #a7f3d0;
-}
-.ok-box h4 {
-  font-size: 16px;
-  color: #065f46;
-  margin-bottom: 4px;
-}
-.ok-box p { font-size: 13px; color: #047857; margin-bottom: 12px; }
+.ok-box p{font-size:13px;color:#a9c6e6;margin-bottom:16px}
 .ok-box .filename {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
   margin-bottom: 12px;
   word-break: break-all;
+  text-shadow: 0 0 10px rgba(0,217,255,.5);
 }
-.dl {
-  display: inline-block;
-  padding: 10px 18px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #fff;
-  text-decoration: none;
-  background: var(--success);
+.dl{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  max-width:100%;
+  padding:14px 20px;border-radius:12px;
+  font-size:14px;font-weight:800;letter-spacing:.5px;
+  color:#04060e;text-decoration:none;
+  background:linear-gradient(100deg,var(--blue),var(--pink));
+  box-shadow:0 8px 28px rgba(0,217,255,.28);
+  transition:.25s;word-break:break-all;text-align:center;
 }
-.copy {
-  display: block;
-  width: 100%;
-  margin-top: 8px;
-  padding: 8px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--muted);
-  background: transparent;
-  border: 1px solid var(--border);
+.dl:hover{transform:translateY(-2px);box-shadow:0 12px 38px rgba(255,45,136,.42)}
+.copy{
+  display:block;width:100%;margin-top:10px;
+  padding:11px;border-radius:11px;cursor:pointer;
+  font-family:inherit;font-size:12.5px;font-weight:700;letter-spacing:1.2px;
+  color:#9fd8ff;background:transparent;
+  border:1px solid rgba(0,217,255,.32);
+  transition:.22s;text-transform:uppercase;
 }
-.copy:hover { background: #fff; color: var(--text); }
+.copy:hover{background:rgba(0,217,255,.1);color:#fff;border-color:var(--blue)}
 
-.foot {
-  text-align: center;
-  font-size: 12px;
-  color: var(--muted);
+/* footer */
+.foot{
+  text-align:center;font-size:11.5px;color:#42586f;
+  letter-spacing:1.1px;margin-top:6px;
 }
 </style>
 </head>
@@ -344,13 +419,13 @@ body {
 
   <!-- HEADER -->
   <div class="card head">
-    <div class="title">Bypass Tool</div>
+    <div class="title">⚡ BYPASS TOOL</div>
     <div class="sub">Hệ thống vượt link tự động · v2.4</div>
   </div>
 
   <!-- CHỌN SITE -->
   <div class="card">
-    <div class="sec-title">Chọn trang web cần vượt link</div>
+    <div class="sec-title">Ấn chọn các link trên để xác nhận</div>
     <div class="site-grid" id="siteGrid">
       <button class="site" data-site="Gtraffic.io">Gtraffic.io</button>
       <button class="site" data-site="Link4m">Link4m</button>
@@ -361,16 +436,18 @@ body {
       <button class="site" data-site="Ontop.link">Ontop.link</button>
     </div>
     <div class="sel-line">
+      <span class="dot-live"></span>
       Đã chọn: <b id="selName">Chưa chọn</b>
     </div>
   </div>
 
   <!-- NHẬP URL -->
   <div class="card">
-    <div class="sec-title">Nhập liên kết</div>
-    <label class="field-label" for="urlInput">Chấp nhận định dạng dạng https://</label>
+    <div class="sec-title">Dán URL của web cần vượt link</div>
+    <label class="field-label" for="urlInput">Chỉ chấp nhận dạng <b style="color:#00d9ff">https://</b></label>
     <div class="input-wrap">
-      <input id="urlInput" type="text" spellcheck="false" autocomplete="off" placeholder="https://">
+      <input id="urlInput" type="text" spellcheck="false" autocomplete="off"
+             placeholder="https://">
     </div>
     <div class="url-err" id="urlErr"></div>
     <button class="btn" id="btnBypass">
@@ -381,13 +458,13 @@ body {
   <!-- BẢNG TRẠNG THÁI -->
   <div class="card panel" id="panel">
     <div class="panel-head">
-      Trạng thái xử lý
+      Bảng trạng thái
       <span class="tag" id="panelTag">ĐANG XỬ LÝ</span>
     </div>
 
     <div class="info-grid" id="infoGrid">
       <div class="info"><span>Thời gian</span><b id="iTime">--</b></div>
-      <div class="info"><span>IP Thiết bị</span><b class="ip" id="iIp">--</b></div>
+      <div class="info"><span>IP thiết bị</span><b class="ip" id="iIp">--</b></div>
       <div class="info"><span>Thiết bị</span><b id="iDev">--</b></div>
     </div>
 
@@ -402,6 +479,9 @@ body {
 </div>
 
 <script>
+/* =========================================================
+   CẤU HÌNH
+   ========================================================= */
 const STEPS = [
   'Trạng thái: Sẵn sàng',
   'Đang kiểm tra kết nối...',
@@ -413,8 +493,9 @@ const STEPS = [
   'Đang xác nhận...'
 ];
 const FINAL_OK = 'Bypass thành công!';
-const TOTAL_TIME = 15000;
+const TOTAL_TIME = 15000; // 15 giây
 
+/* Cơ sở dữ liệu link đã xác nhận */
 const DATABASE = [
   {
     re: /^https:\/\/layma\.net\/5ABkvpfQu\/?$/i,
@@ -438,6 +519,9 @@ const DATABASE = [
   }
 ];
 
+/* =========================================================
+   DOM
+   ========================================================= */
 const $ = id => document.getElementById(id);
 const input    = $('urlInput');
 const btn      = $('btnBypass');
@@ -453,6 +537,9 @@ const selName  = $('selName');
 
 let running = false;
 
+/* =========================================================
+   CHỌN SITE
+   ========================================================= */
 document.querySelectorAll('.site').forEach(b => {
   b.addEventListener('click', () => {
     if (running) return;
@@ -462,6 +549,7 @@ document.querySelectorAll('.site').forEach(b => {
   });
 });
 
+/* Tự chọn site theo domain khi nhập */
 input.addEventListener('input', () => {
   urlErr.classList.remove('show');
   const v = input.value.trim().toLowerCase();
@@ -487,6 +575,9 @@ input.addEventListener('input', () => {
   }
 });
 
+/* =========================================================
+   TIỆN ÍCH
+   ========================================================= */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const rand  = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
 
@@ -530,6 +621,8 @@ function addStep(text, type) {
 
 function showUrlError(msg) {
   urlErr.textContent = '⚠ ' + msg;
+  urlErr.classList.remove('show');
+  void urlErr.offsetWidth; // reset animation
   urlErr.classList.add('show');
 }
 
@@ -539,10 +632,13 @@ function resetPanel() {
   barFill.style.width = '0%';
   panelTag.textContent = 'ĐANG XỬ LÝ';
   panelTag.style.color = '';
-  panelTag.style.background = '';
+  panelTag.style.borderColor = '';
   infoGrid.style.display = '';
 }
 
+/* =========================================================
+   XỬ LÝ CHÍNH
+   ========================================================= */
 btn.addEventListener('click', startBypass);
 
 async function startBypass() {
@@ -550,6 +646,7 @@ async function startBypass() {
 
   const url = input.value.trim();
 
+  /* --- Kiểm tra dạng https:// --- */
   if (!url) {
     showUrlError('Vui lòng dán URL của web cần vượt link!');
     return;
@@ -565,6 +662,7 @@ async function startBypass() {
 
   urlErr.classList.remove('show');
 
+  /* --- Bắt đầu --- */
   running = true;
   btn.disabled = true;
   btn.classList.add('loading');
@@ -574,11 +672,14 @@ async function startBypass() {
   resetPanel();
   panel.classList.add('show');
 
+  // Thông tin thiết bị
   $('iTime').textContent = nowStr();
-  $('iIp').textContent   = fakeIP();$('iDev').textContent  = getDevice();
+  $('iIp').textContent   = fakeIP();
+  $('iDev').textContent  = getDevice();
 
   panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
+  /* --- Chạy 8 bước trong 12s --- */
   const stepDelay = 1500;
   for (let i = 0; i < STEPS.length; i++) {
     addStep(STEPS[i], i === 2 || i === 4 ? 'ok' : '');
@@ -586,67 +687,76 @@ async function startBypass() {
     await sleep(stepDelay);
   }
 
+  /* --- Chờ cho đủ 15 giây --- */
   const remain = TOTAL_TIME - (STEPS.length * stepDelay);
   await sleep(remain);
   barFill.style.width = '100%';
 
+  /* --- Xác định kết quả --- */
   const found = DATABASE.find(item => item.re.test(url));
 
   if (found) {
+    /* ===== THÀNH CÔNG ===== */
     addStep(FINAL_OK, 'ok');
     panelTag.textContent = 'HOÀN TẤT';
-    panelTag.style.color = '#10b981';
-    panelTag.style.background = '#ecfdf5';
+    panelTag.style.color = '#7dffc4';
+    panelTag.style.borderColor = 'rgba(30,232,138,.5)';
+    panelTag.style.animation = 'none';
 
     resultEl.innerHTML = `
       <div class="ok-box">
-        <h4>BYPASS THÀNH CÔNG</h4>
-        <p>Liên kết của bạn đã được giải mã thành công.</p>
+        <h4>🎉 BYPASS THÀNH CÔNG</h4>
+        <p>Bạn đã vượt qua giới hạn! Link đã được lấy về máy chủ.</p>
         <div class="filename">📄 ${found.name}</div>
         <a class="dl" href="${found.link}" target="_blank" rel="noopener">
-          TẢI XUỐNG NGAY
+          📦 TẢI XUỐNG NGAY
         </a>
-        <button class="copy" id="copyBtn">SAO CHÉP LINK TẢI XUỐNG</button>
+        <button class="copy" id="copyBtn">📋 COPY LINK TẢI XUỐNG</button>
       </div>
     `;
     const copyBtn = $('copyBtn');
     copyBtn.addEventListener('click', () => {
       navigator.clipboard.writeText(found.link).then(() => {
-        copyBtn.textContent = 'ĐÃ SAO CHÉP LINK';
-        setTimeout(() => copyBtn.textContent = 'SAO CHÉP LINK TẢI XUỐNG', 1800);
+        copyBtn.textContent = '✅ ĐÃ COPY LINK';
+        setTimeout(() => copyBtn.textContent = '📋 COPY LINK TẢI XUỐNG', 1800);
       }).catch(() => {
-        copyBtn.textContent = 'KHÔNG THỂ SAO CHÉP';
-        setTimeout(() => copyBtn.textContent = 'SAO CHÉP LINK TẢI XUỐNG', 1800);
+        copyBtn.textContent = '❌ KHÔNG COPY ĐƯỢC';
+        setTimeout(() => copyBtn.textContent = '📋 COPY LINK TẢI XUỐNG', 1800);
       });
     });
 
   } else {
+    /* ===== LỖI ===== */
+    // Ẩn toàn bộ thông tin thiết bị khi có lỗi
     infoGrid.style.display = 'none';
 
+    // Tỷ lệ: 85% lỗi kết nối — 15% lỗi 404
     const is404 = Math.random() < 0.15;
 
     panelTag.textContent = 'THẤT BẠI';
-    panelTag.style.color = '#ef4444';
-    panelTag.style.background = '#fef2f2';
+    panelTag.style.color = '#ff5f7a';
+    panelTag.style.borderColor = 'rgba(255,45,85,.5)';
+    panelTag.style.animation = 'none';
 
     if (is404) {
       addStep('Xác thực thất bại — mã không hợp lệ!', 'bad');
       resultEl.innerHTML = `
         <div class="err-box">
-          ERROR 404 — KHÔNG THỂ XỬ LÝ
+          ERROR 404 — DO NOT ACCEPT THIS ACTION
           <small>Mã bypass không tồn tại hoặc đã hết hạn.</small>
         </div>`;
     } else {
       addStep('Mất kết nối tới máy chủ!', 'bad');
       resultEl.innerHTML = `
         <div class="err-box">
-          LỖI KẾT NỐI MẠNG
-          <small>Vui lòng kiểm tra đường truyền và thử lại sau.</small>
+          LỖI KẾT NỐI — THIẾT BỊ VUI LÒNG KIỂM TRA KẾT NỐI MẠNG CỦA BẠN
+          <small>Vui lòng kiểm tra mạng và thử lại sau.</small>
         </div>`;
     }
     resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
+  /* --- Mở khoá --- */
   running = false;
   btn.disabled = false;
   btn.classList.remove('loading');
@@ -654,6 +764,7 @@ async function startBypass() {
   btnText.textContent = 'VƯỢT LINK LẦN NỮA';
 }
 
+/* Nhấn Enter để chạy */
 input.addEventListener('keydown', e => {
   if (e.key === 'Enter') startBypass();
 });
