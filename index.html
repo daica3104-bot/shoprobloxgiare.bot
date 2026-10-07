@@ -402,9 +402,6 @@ body {
 </div>
 
 <script>
-/* =========================================================
-   CẤU HÌNH & XỬ LÝ JS (GIỮ NGUYÊN TÍNH NĂNG)
-   ========================================================= */
 const STEPS = [
   'Trạng thái: Sẵn sàng',
   'Đang kiểm tra kết nối...',
@@ -479,4 +476,187 @@ input.addEventListener('input', () => {
     'bbmkt.com': 'Bbmkt.com',
     'ontop.link': 'Ontop.link'
   };
-  for (const key in
+  for (const key in map) {
+    if (v.includes(key)) {
+      document.querySelectorAll('.site').forEach(x => {
+        x.classList.toggle('active', x.dataset.site === map[key]);
+      });
+      selName.textContent = map[key];
+      return;
+    }
+  }
+});
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const rand  = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+
+function fakeIP() {
+  const pre = ['14.161', '113.22', '27.72', '42.113', '203.113', '171.244'];
+  return pre[rand(0, pre.length - 1)] + '.' + rand(1, 254) + '.' + rand(2, 254);
+}
+
+function getDevice() {
+  const ua = navigator.userAgent;
+  let os = 'Unknown';
+  if (/Windows/i.test(ua)) os = 'Windows';
+  else if (/Android/i.test(ua)) os = 'Android';
+  else if (/iPhone|iPad|iPod/i.test(ua)) os = 'iOS';
+  else if (/Mac OS X/i.test(ua)) os = 'macOS';
+  else if (/Linux/i.test(ua)) os = 'Linux';
+
+  let br = 'Khác';
+  if (/Edg\//i.test(ua)) br = 'Edge';
+  else if (/OPR\//i.test(ua)) br = 'Opera';
+  else if (/Chrome\//i.test(ua)) br = 'Chrome';
+  else if (/Firefox\//i.test(ua)) br = 'Firefox';
+  else if (/Safari\//i.test(ua)) br = 'Safari';
+
+  return os + ' • ' + br;
+}
+
+function nowStr() {
+  const d = new Date();
+  const p = n => String(n).padStart(2, '0');
+  return `${p(d.getDate())}/${p(d.getMonth() + 1)}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+}
+
+function addStep(text, type) {
+  const li = document.createElement('li');
+  li.className = 'step' + (type ? ' ' + type : '');
+  li.innerHTML = '<i></i><span>' + text + '</span>';
+  stepsUl.appendChild(li);
+  li.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+
+function showUrlError(msg) {
+  urlErr.textContent = '⚠ ' + msg;
+  urlErr.classList.add('show');
+}
+
+function resetPanel() {
+  stepsUl.innerHTML = '';
+  resultEl.innerHTML = '';
+  barFill.style.width = '0%';
+  panelTag.textContent = 'ĐANG XỬ LÝ';
+  panelTag.style.color = '';
+  panelTag.style.background = '';
+  infoGrid.style.display = '';
+}
+
+btn.addEventListener('click', startBypass);
+
+async function startBypass() {
+  if (running) return;
+
+  const url = input.value.trim();
+
+  if (!url) {
+    showUrlError('Vui lòng dán URL của web cần vượt link!');
+    return;
+  }
+  if (!/^https:\/\//i.test(url)) {
+    showUrlError('Chỉ chấp nhận URL dạng https:// — vui lòng nhập lại!');
+    return;
+  }
+  if (!/^https:\/\/[^\s]+\.[^\s]+/i.test(url)) {
+    showUrlError('URL không hợp lệ. Vui lòng kiểm tra lại!');
+    return;
+  }
+
+  urlErr.classList.remove('show');
+
+  running = true;
+  btn.disabled = true;
+  btn.classList.add('loading');
+  input.disabled = true;
+  btnText.textContent = 'ĐANG XỬ LÝ...';
+
+  resetPanel();
+  panel.classList.add('show');
+
+  $('iTime').textContent = nowStr();
+  $('iIp').textContent   = fakeIP();$('iDev').textContent  = getDevice();
+
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  const stepDelay = 1500;
+  for (let i = 0; i < STEPS.length; i++) {
+    addStep(STEPS[i], i === 2 || i === 4 ? 'ok' : '');
+    barFill.style.width = ((i + 1) / (STEPS.length + 2) * 100) + '%';
+    await sleep(stepDelay);
+  }
+
+  const remain = TOTAL_TIME - (STEPS.length * stepDelay);
+  await sleep(remain);
+  barFill.style.width = '100%';
+
+  const found = DATABASE.find(item => item.re.test(url));
+
+  if (found) {
+    addStep(FINAL_OK, 'ok');
+    panelTag.textContent = 'HOÀN TẤT';
+    panelTag.style.color = '#10b981';
+    panelTag.style.background = '#ecfdf5';
+
+    resultEl.innerHTML = `
+      <div class="ok-box">
+        <h4>BYPASS THÀNH CÔNG</h4>
+        <p>Liên kết của bạn đã được giải mã thành công.</p>
+        <div class="filename">📄 ${found.name}</div>
+        <a class="dl" href="${found.link}" target="_blank" rel="noopener">
+          TẢI XUỐNG NGAY
+        </a>
+        <button class="copy" id="copyBtn">SAO CHÉP LINK TẢI XUỐNG</button>
+      </div>
+    `;
+    const copyBtn = $('copyBtn');
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(found.link).then(() => {
+        copyBtn.textContent = 'ĐÃ SAO CHÉP LINK';
+        setTimeout(() => copyBtn.textContent = 'SAO CHÉP LINK TẢI XUỐNG', 1800);
+      }).catch(() => {
+        copyBtn.textContent = 'KHÔNG THỂ SAO CHÉP';
+        setTimeout(() => copyBtn.textContent = 'SAO CHÉP LINK TẢI XUỐNG', 1800);
+      });
+    });
+
+  } else {
+    infoGrid.style.display = 'none';
+
+    const is404 = Math.random() < 0.15;
+
+    panelTag.textContent = 'THẤT BẠI';
+    panelTag.style.color = '#ef4444';
+    panelTag.style.background = '#fef2f2';
+
+    if (is404) {
+      addStep('Xác thực thất bại — mã không hợp lệ!', 'bad');
+      resultEl.innerHTML = `
+        <div class="err-box">
+          ERROR 404 — KHÔNG THỂ XỬ LÝ
+          <small>Mã bypass không tồn tại hoặc đã hết hạn.</small>
+        </div>`;
+    } else {
+      addStep('Mất kết nối tới máy chủ!', 'bad');
+      resultEl.innerHTML = `
+        <div class="err-box">
+          LỖI KẾT NỐI MẠNG
+          <small>Vui lòng kiểm tra đường truyền và thử lại sau.</small>
+        </div>`;
+    }
+    resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  running = false;
+  btn.disabled = false;
+  btn.classList.remove('loading');
+  input.disabled = false;
+  btnText.textContent = 'VƯỢT LINK LẦN NỮA';
+}
+
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter') startBypass();
+});
+</script>
+</body>
+</html>
