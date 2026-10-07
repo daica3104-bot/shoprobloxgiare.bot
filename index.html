@@ -3,444 +3,480 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bypass Tool - Gtraffic.io</title>
+<title>Bypass Tool — Gtraffic • Link4m • Layma</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-  body {
-    min-height: 100vh;
-    background: radial-gradient(circle at top, #001a33 0%, #000308 100%);
-    color: #e0f7ff;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 30px 15px;
-  }
-  .container {
-    width: 100%;
-    max-width: 620px;
-    background: linear-gradient(145deg, #001a2e, #000a14);
-    border: 1px solid #00bfff;
-    border-radius: 16px;
-    padding: 25px;
-    box-shadow: 0 0 25px rgba(0,191,255,0.4), inset 0 0 15px rgba(0,191,255,0.1);
-  }
-  h1 {
-    text-align: center;
-    color: #00d4ff;
-    font-size: 22px;
-    margin-bottom: 6px;
-    text-shadow: 0 0 12px #00bfff;
-    letter-spacing: 1px;
-  }
-  .subtitle {
-    text-align: center;
-    color: #4db8ff;
-    font-size: 12px;
-    margin-bottom: 20px;
-    opacity: 0.8;
-  }
-  .section-title {
-    color: #00d4ff;
-    font-size: 13px;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    border-left: 3px solid #00bfff;
-    padding-left: 8px;
-  }
-  .sites {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-  .site-btn {
-    background: #001e33;
-    border: 1px solid #0077aa;
-    color: #7fdcff;
-    padding: 10px 8px;
-    border-radius: 8px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-align: center;
-  }
-  .site-btn:hover {
-    background: #002e4d;
-    border-color: #00bfff;
-    color: #fff;
-    box-shadow: 0 0 10px rgba(0,191,255,0.5);
-  }
-  .site-btn.active {
-    background: linear-gradient(145deg, #0077aa, #00bfff);
-    color: #000;
-    font-weight: bold;
-    border-color: #00e5ff;
-    box-shadow: 0 0 15px #00bfff;
-  }
-  .input-group {
-    margin-bottom: 18px;
-  }
-  input[type="text"] {
-    width: 100%;
-    padding: 13px 14px;
-    background: #000d1a;
-    border: 1px solid #0077aa;
-    border-radius: 8px;
-    color: #e0f7ff;
-    font-size: 14px;
-    outline: none;
-    transition: all 0.2s;
-  }
-  input[type="text"]:focus {
-    border-color: #00d4ff;
-    box-shadow: 0 0 10px rgba(0,212,255,0.4);
-  }
-  input[type="text"]::placeholder {
-    color: #3a7a99;
-  }
-  .bypass-btn {
-    width: 100%;
-    padding: 15px;
-    background: linear-gradient(145deg, #00bfff, #0077aa);
-    border: none;
-    border-radius: 10px;
-    color: #001a2e;
-    font-size: 16px;
-    font-weight: bold;
-    letter-spacing: 2px;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: all 0.25s;
-    box-shadow: 0 0 20px rgba(0,191,255,0.5);
-  }
-  .bypass-btn:hover:not(:disabled) {
-    box-shadow: 0 0 30px rgba(0,212,255,0.9);
-    transform: translateY(-1px);
-  }
-  .bypass-btn:disabled {
-    background: #003049;
-    color: #4d7a94;
-    cursor: not-allowed;
-    box-shadow: none;
-  }
-  .status-panel {
-    margin-top: 22px;
-    background: #000a14;
-    border: 1px solid #0077aa;
-    border-radius: 10px;
-    padding: 15px;
-    display: none;
-  }
-  .status-panel.show { display: block; }
-  .info-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: #7fdcff;
-    margin-bottom: 6px;
-    padding-bottom: 6px;
-    border-bottom: 1px dashed #003049;
-  }
-  .info-row span:last-child { color: #00e5ff; font-family: monospace; }
-  .status-log {
-    margin-top: 10px;
-    font-family: monospace;
-    font-size: 13px;
-    line-height: 1.9;
-    max-height: 220px;
-    overflow-y: auto;
-  }
-  .status-log .line { color: #7fdcff; }
-  .status-log .line::before { content: "> "; color: #00bfff; }
-  .status-log .ok { color: #00ff9d; }
-  .status-log .warn { color: #ffcc00; }
-  .result-box {
-    margin-top: 14px;
-    padding: 12px;
-    background: #001a2e;
-    border: 1px solid #00bfff;
-    border-radius: 8px;
-    color: #00e5ff;
-    font-size: 12px;
-    word-break: break-all;
-    display: none;
-  }
-  .result-box.show { display: block; }
-  .result-box a { color: #00ff9d; text-decoration: none; }
-  .error-box {
-    margin-top: 14px;
-    padding: 12px;
-    background: #1a0000;
-    border: 1px solid #ff2a2a;
-    border-radius: 8px;
-    color: #ff2a2a;
-    font-size: 13px;
-    text-align: center;
-    font-weight: bold;
-    display: none;
-  }
-  .error-box.show { display: block; animation: shake 0.3s; }
-  @keyframes shake {
-    0%,100% { transform: translateX(0); }
-    25% { transform: translateX(-4px); }
-    75% { transform: translateX(4px); }
-  }
-  .progress-bar {
-    height: 6px;
-    background: #001a2e;
-    border-radius: 3px;
-    overflow: hidden;
-    margin-top: 12px;
-    display: none;
-  }
-  .progress-bar.show { display: block; }
-  .progress-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #00bfff, #00e5ff);
-    box-shadow: 0 0 10px #00bfff;
-    transition: width 1s linear;
-  }
-  .countdown {
-    text-align: center;
-    color: #00e5ff;
-    font-size: 14px;
-    margin-top: 8px;
-    font-family: monospace;
-    display: none;
-  }
-  .countdown.show { display: block; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --bg: #f8fafc;
+  --card-bg: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --success: #10b981;
+  --error: #ef4444;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 680px;
+}
+
+/* Card layout */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Header */
+.head {
+  text-align: center;
+}
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+}
+.sub {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Section Title */
+.sec-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+/* Site Grid */
+.site-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+}
+.site {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  transition: all 0.2s ease;
+}
+.site:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.site.active {
+  background: #eff6ff;
+  color: var(--primary);
+  border-color: var(--primary);
+  font-weight: 600;
+}
+
+.sel-line {
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.sel-line b {
+  color: var(--primary);
+}
+
+/* Input Form */
+.field-label {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.input-wrap {
+  position: relative;
+}
+#urlInput {
+  width: 100%;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text);
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid var(--border);
+  outline: none;
+  transition: border-color 0.2s;
+}
+#urlInput:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+#urlInput:disabled {
+  background: var(--bg);
+  cursor: not-allowed;
+}
+
+.url-err {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--error);
+  display: none;
+}
+.url-err.show { display: block; }
+
+/* Button */
+.btn {
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: var(--primary);
+  transition: background 0.2s;
+}
+.btn:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.btn .spin {
+  display: none;
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
+  border: 2px solid #fff;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: -2px;
+}
+.btn.loading .spin { display: inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Panel Trạng thái */
+.panel { display: none; }
+.panel.show { display: block; }
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.panel-head span.tag {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: var(--primary);
+  background: #eff6ff;
+}
+
+/* Progress bar */
+.bar {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.bar i {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: var(--primary);
+  transition: width 0.2s linear;
+}
+
+/* Info grid */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.info {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+.info span {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.info b {
+  font-size: 13px;
+  color: var(--text);
+  word-break: break-word;
+}
+
+/* Steps list */
+.steps { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--muted);
+  background: var(--bg);
+}
+.step i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+.step.ok { color: var(--success); background: #ecfdf5; }
+.step.ok i { background: var(--success); }
+.step.bad { color: var(--error); background: #fef2f2; }
+.step.bad i { background: var(--error); }
+
+/* Results */
+.result { margin-top: 16px; }
+.err-box {
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--error);
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+.err-box small {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #991b1b;
+}
+
+.ok-box {
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+}
+.ok-box h4 {
+  font-size: 16px;
+  color: #065f46;
+  margin-bottom: 4px;
+}
+.ok-box p { font-size: 13px; color: #047857; margin-bottom: 12px; }
+.ok-box .filename {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 12px;
+  word-break: break-all;
+}
+.dl {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  background: var(--success);
+}
+.copy {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--border);
+}
+.copy:hover { background: #fff; color: var(--text); }
+
+.foot {
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+}
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>⚡ BYPASS TOOL ⚡</h1>
-  <div class="subtitle">Chọn site để xác nhận trước khi vượt link</div>
 
-  <div class="section-title">Xác nhận site</div>
-  <div class="sites" id="sites">
-    <div class="site-btn" data-site="gtraffic.io">Gtraffic.io</div>
-    <div class="site-btn" data-site="link4m">Link4m</div>
-    <div class="site-btn" data-site="layma.net">Layma.net</div>
-    <div class="site-btn" data-site="traffic4k.com">Traffic4k.com</div>
-    <div class="site-btn" data-site="site2s.com">Site2s.com</div>
-    <div class="site-btn" data-site="bbmkt.com">Bbmkt.com</div>
-    <div class="site-btn" data-site="ontop.link">Ontop.link</div>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="card head">
+    <div class="title">Bypass Tool</div>
+    <div class="sub">Hệ thống vượt link tự động · v2.4</div>
   </div>
 
-  <div class="section-title">Dán URL cần vượt</div>
-  <div class="input-group">
-    <input type="text" id="urlInput" placeholder="https://">
+  <!-- CHỌN SITE -->
+  <div class="card">
+    <div class="sec-title">Chọn trang web cần vượt link</div>
+    <div class="site-grid" id="siteGrid">
+      <button class="site" data-site="Gtraffic.io">Gtraffic.io</button>
+      <button class="site" data-site="Link4m">Link4m</button>
+      <button class="site" data-site="Layma.net">Layma.net</button>
+      <button class="site" data-site="Traffic4k.com">Traffic4k.com</button>
+      <button class="site" data-site="Site2s.com">Site2s.com</button>
+      <button class="site" data-site="Bbmkt.com">Bbmkt.com</button>
+      <button class="site" data-site="Ontop.link">Ontop.link</button>
+    </div>
+    <div class="sel-line">
+      Đã chọn: <b id="selName">Chưa chọn</b>
+    </div>
   </div>
 
-  <button class="bypass-btn" id="bypassBtn">VƯỢT LINK</button>
-
-  <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
-  <div class="countdown" id="countdown"></div>
-
-  <div class="status-panel" id="statusPanel">
-    <div class="info-row"><span>⏱ Thời gian:</span><span id="iTime">--</span></div>
-    <div class="info-row"><span>🌐 IP thiết bị:</span><span id="iIp">--</span></div>
-    <div class="info-row"><span>💻 Thiết bị:</span><span id="iDevice">--</span></div>
-    <div class="info-row"><span>📡 Trạng thái:</span><span id="iStatus">Sẵn sàng</span></div>
-    <div class="status-log" id="statusLog"></div>
+  <!-- NHẬP URL -->
+  <div class="card">
+    <div class="sec-title">Nhập liên kết</div>
+    <label class="field-label" for="urlInput">Chấp nhận định dạng dạng https://</label>
+    <div class="input-wrap">
+      <input id="urlInput" type="text" spellcheck="false" autocomplete="off" placeholder="https://">
+    </div>
+    <div class="url-err" id="urlErr"></div>
+    <button class="btn" id="btnBypass">
+      <span class="spin"></span><span id="btnText">VƯỢT LINK</span>
+    </button>
   </div>
 
-  <div class="result-box" id="resultBox"></div>
-  <div class="error-box" id="errorBox"></div>
+  <!-- BẢNG TRẠNG THÁI -->
+  <div class="card panel" id="panel">
+    <div class="panel-head">
+      Trạng thái xử lý
+      <span class="tag" id="panelTag">ĐANG XỬ LÝ</span>
+    </div>
+
+    <div class="info-grid" id="infoGrid">
+      <div class="info"><span>Thời gian</span><b id="iTime">--</b></div>
+      <div class="info"><span>IP Thiết bị</span><b class="ip" id="iIp">--</b></div>
+      <div class="info"><span>Thiết bị</span><b id="iDev">--</b></div>
+    </div>
+
+    <div class="bar"><i id="barFill"></i></div>
+
+    <ul class="steps" id="steps"></ul>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <div class="foot">© BYPASS TOOL · SYSTEM AUTO LINK SKIP</div>
 </div>
 
 <script>
-  // Danh sách map URL -> kết quả
-  const URL_MAP = {
-    "https://layma.net/5ABkvpfQu": "https://www.mediafire.com/file/msusgfxw3xosdpl/AimLock+Bro.zip/file",
-    "https://link4m.net/eYerc": "https://www.mediafire.com/file/yqefvmq4mefu7h5/Minecraft_PE_26.30_BANDISHARE.apk/file",
-    "https://bbmkts.com/go/Hfz47hy5": "https://www.mediafire.com/file/i5eioodkjudzmty/hackff+menuFFM.zip/file",
-    "https://gtraffic.io/Yv2QaKD": "https://pastefy.app/bbSrxKOk/raw"
-  };
+/* =========================================================
+   CẤU HÌNH & XỬ LÝ JS (GIỮ NGUYÊN TÍNH NĂNG)
+   ========================================================= */
+const STEPS = [
+  'Trạng thái: Sẵn sàng',
+  'Đang kiểm tra kết nối...',
+  'Kết nối thành công!',
+  'Đang tải module...',
+  'Tải module hoàn tất!',
+  'Đang giả lập bypass...',
+  'Bỏ qua xác thực...',
+  'Đang xác nhận...'
+];
+const FINAL_OK = 'Bypass thành công!';
+const TOTAL_TIME = 15000;
 
-  const sitesEl = document.getElementById('sites');
-  const urlInput = document.getElementById('urlInput');
-  const bypassBtn = document.getElementById('bypassBtn');
-  const statusPanel = document.getElementById('statusPanel');
-  const statusLog = document.getElementById('statusLog');
-  const resultBox = document.getElementById('resultBox');
-  const errorBox = document.getElementById('errorBox');
-  const progressBar = document.getElementById('progressBar');
-  const progressFill = document.getElementById('progressFill');
-  const countdown = document.getElementById('countdown');
+const DATABASE = [
+  {
+    re: /^https:\/\/layma\.net\/5ABkvpfQu\/?$/i,
+    name: 'AimLock Bro.zip',
+    link: 'https://www.mediafire.com/file/msusgfxw3xosdpl/AimLock+Bro.zip/file'
+  },
+  {
+    re: /^https:\/\/link4m\.net\/eYerc\/?$/i,
+    name: 'Minecraft_PE_26.30_BANDISHARE.apk',
+    link: 'https://www.mediafire.com/file/yqefvmq4mefu7h5/Minecraft_PE_26.30_BANDISHARE.apk/file'
+  },
+  {
+    re: /^https:\/\/bbmkts\.com\/go\/Hfz47hy5\/?$/i,
+    name: 'hackff menuFFM.zip',
+    link: 'https://www.mediafire.com/file/i5eioodkjudzmty/hackff+menuFFM.zip/file'
+  },
+  {
+    re: /^https:\/\/gtraffic\.io\/Yv2QaKD\/?$/i,
+    name: 'Module gtraffic.io',
+    link: 'https://pastefy.app/bbSrxKOk/raw'
+  }
+];
 
-  let selectedSite = null;
+const $ = id => document.getElementById(id);
+const input    = $('urlInput');
+const btn      = $('btnBypass');
+const btnText  = $('btnText');
+const urlErr   = $('urlErr');
+const panel    = $('panel');
+const stepsUl  = $('steps');
+const resultEl = $('result');
+const barFill  = $('barFill');
+const infoGrid = $('infoGrid');
+const panelTag = $('panelTag');
+const selName  = $('selName');
 
-  // Chọn site
-  sitesEl.addEventListener('click', e => {
-    const btn = e.target.closest('.site-btn');
-    if (!btn) return;
-    document.querySelectorAll('.site-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    selectedSite = btn.dataset.site;
+let running = false;
+
+document.querySelectorAll('.site').forEach(b => {
+  b.addEventListener('click', () => {
+    if (running) return;
+    document.querySelectorAll('.site').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    selName.textContent = b.dataset.site;
   });
+});
 
-  function getDeviceInfo() {
-    const ua = navigator.userAgent;
-    let os = "Unknown OS";
-    if (/Windows/.test(ua)) os = "Windows";
-    else if (/Android/.test(ua)) os = "Android";
-    else if (/iPhone|iPad/.test(ua)) os = "iOS";
-    else if (/Mac/.test(ua)) os = "MacOS";
-    else if (/Linux/.test(ua)) os = "Linux";
-    let browser = "Unknown";
-    if (/Chrome/.test(ua) && !/Edge/.test(ua)) browser = "Chrome";
-    else if (/Firefox/.test(ua)) browser = "Firefox";
-    else if (/Safari/.test(ua)) browser = "Safari";
-    else if (/Edge/.test(ua)) browser = "Edge";
-    return `${os} • ${browser}`;
-  }
-
-  function randomIp() {
-    return `${rnd(11,223)}.${rnd(0,255)}.${rnd(0,255)}.${rnd(1,254)}`;
-  }
-  function rnd(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-
-  function pad(n) { return n < 10 ? '0'+n : n; }
-  function nowStr() {
-    const d = new Date();
-    return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-  }
-
-  function addLog(text, cls='') {
-    const div = document.createElement('div');
-    div.className = 'line ' + cls;
-    div.textContent = text;
-    statusLog.appendChild(div);
-    statusLog.scrollTop = statusLog.scrollHeight;
-  }
-
-  function resetUI() {
-    statusLog.innerHTML = '';
-    resultBox.classList.remove('show');
-    resultBox.innerHTML = '';
-    errorBox.classList.remove('show');
-    errorBox.textContent = '';
-  }
-
-  async function runBypass() {
-    const url = urlInput.value.trim();
-
-    // Validate https
-    if (!url.startsWith('https://')) {
-      showError('Vui lòng nhập URL bắt đầu bằng https://');
-      return;
-    }
-    if (!selectedSite) {
-      showError('Vui lòng chọn site xác nhận!');
-      return;
-    }
-
-    resetUI();
-    bypassBtn.disabled = true;
-    progressBar.classList.add('show');
-    countdown.classList.add('show');
-    statusPanel.classList.add('show');
-
-    // Info panel
-    document.getElementById('iTime').textContent = nowStr();
-    document.getElementById('iIp').textContent = randomIp();
-    document.getElementById('iDevice').textContent = getDeviceInfo();
-    document.getElementById('iStatus').textContent = 'Đang xử lý...';
-
-    // Đếm ngược 15s
-    let remain = 15;
-    progressFill.style.width = '0%';
-    countdown.textContent = `Đang xử lý... ${remain}s`;
-    progressFill.style.width = '100%';
-
-    // Khởi tạo các bước log
-    addLog('Trạng thái: Sẵn sàng');
-    const stepInterval = setInterval(() => {
-      remain--;
-      countdown.textContent = `Đang xử lý... ${remain}s`;
-      if (remain === 14) {
-        document.getElementById('iStatus').textContent = 'Đang kiểm tra kết nối...';
-        addLog('Đang kiểm tra kết nối...');
-      } else if (remain === 12) {
-        document.getElementById('iStatus').textContent = 'Kết nối thành công!';
-        addLog('Kết nối thành công!', 'ok');
-      } else if (remain === 10) {
-        document.getElementById('iStatus').textContent = 'Đang tải module...';
-        addLog('Đang tải module...');
-      } else if (remain === 8) {
-        document.getElementById('iStatus').textContent = 'Tải module hoàn tất!';
-        addLog('Tải module hoàn tất!', 'ok');
-      } else if (remain === 6) {
-        document.getElementById('iStatus').textContent = 'Đang giả lập bypass...';
-        addLog('Đang giả lập bypass...');
-      } else if (remain === 4) {
-        document.getElementById('iStatus').textContent = 'Bỏ qua xác thực...';
-        addLog('Bỏ qua xác thực...', 'warn');
-      } else if (remain === 2) {
-        document.getElementById('iStatus').textContent = 'Đang xác nhận...';
-        addLog('Đang xác nhận...');
-      }
-      if (remain <= 0) {
-        clearInterval(stepInterval);
-        countdown.classList.remove('show');
-        progressBar.classList.remove('show');
-        finalize(url);
-      }
-    }, 1000);
-  }
-
-  function finalize(url) {
-    // Random lỗi
-    const r = Math.random() * 100;
-
-    if (r < 15) {
-      // 15% - Error 404
-      document.getElementById('iStatus').textContent = 'Thất bại';
-      addLog('Bypass thất bại!', 'warn');
-      showError('ERROR 404 - DO NOT ACCEPT THIS ACTION');
-      bypassBtn.disabled = false;
-      return;
-    }
-
-    // Kiểm tra URL có trong map
-    if (URL_MAP[url]) {
-      // Thành công với URL đặc biệt
-      document.getElementById('iStatus').textContent = 'Bypass thành công!';
-      addLog('Bypass thành công!', 'ok');
-      addLog('Bạn đã vượt qua giới hạn!', 'ok');
-      showResult(URL_MAP[url]);
-      bypassBtn.disabled = false;
-      return;
-    }
-
-    // 85% lỗi kết nối
-    if (r < 100) {
-      document.getElementById('iStatus').textContent = 'Lỗi thiết bị';
-      addLog('Kết nối thất bại!', 'warn');
-      showError('Lỗi kết nối thiết bị, vui lòng kiểm tra kết nối mạng của bạn');
-      bypassBtn.disabled = false;
-      return;
-    }
-  }
-
-  function showError(msg) {
-    errorBox.textContent = msg;
-    errorBox.classList.add('show');
-  }
-
-  function showResult(link) {
-    resultBox.innerHTML = `
-      <div style="color:#00e5ff;margin-bottom:6px;">✔ Bypass thành công! Link của bạn:</div>
-      <a href="${link}" target="_blank" rel="noopener">${link}</a>
-    `;
-    resultBox.classList.add('show');
-  }
-
-  bypassBtn.addEventListener('click', runBypass);
-  urlInput.addEventListener('keypress', e => { if (e.key === 'Enter') runBypass(); });
-</script>
-</body>
-</html>
+input.addEventListener('input', () => {
+  urlErr.classList.remove('show');
+  const v = input.value.trim().toLowerCase();
+  const map = {
+    'gtraffic.io': 'Gtraffic.io',
+    'link4m.net': 'Link4m',
+    'link4m.com': 'Link4m',
+    'layma.net': 'Layma.net',
+    'traffic4k.com': 'Traffic4k.com',
+    'site2s.com': 'Site2s.com',
+    'bbmkts.com': 'Bbmkt.com',
+    'bbmkt.com': 'Bbmkt.com',
+    'ontop.link': 'Ontop.link'
+  };
+  for (const key in
